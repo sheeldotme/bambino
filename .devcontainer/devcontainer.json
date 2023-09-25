@@ -1,0 +1,20 @@
+{
+    "name": "Development Container",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": ".."
+    },
+    "privileged": true,
+    "remoteUser": "core",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "editorconfig.editorconfig",
+                "esbenp.prettier-vscode",
+                "ms-azuretools.vscode-docker",
+                "github.vscode-github-actions",
+                "eamodio.gitlens"
+            ]
+        }
+    }
+}
