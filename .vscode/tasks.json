@@ -1,0 +1,26 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "main-build-test",
+			"type": "shell",
+			"command": "just",
+			"args": ["build-test"],
+			"group": {
+				"kind": "build",
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/packages/main"
+			}
+		},
+		{
+			"label": "main-clean",
+			"type": "shell",
+			"command": "just",
+			"args": ["clean"],
+			"options": {
+				"cwd": "${workspaceFolder}/packages/main"
+			}
+		}
+	]
+}

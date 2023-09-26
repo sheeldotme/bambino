@@ -15,7 +15,9 @@
                 "github.vscode-github-actions",
                 "eamodio.gitlens",
                 "mkhl.direnv",
-                "ziglang.vscode-zig"
+                "ziglang.vscode-zig",
+                "jnoortheen.nix-ide",
+                "vadimcn.vscode-lldb"
             ]
         }
     }
