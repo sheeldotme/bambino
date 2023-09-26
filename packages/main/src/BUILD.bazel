@@ -1,0 +1,11 @@
+load("@rules_zig//zig:defs.bzl", "zig_library", "zig_test")
+
+zig_library(
+    name = "main",
+    main = "main.zig"
+)
+
+zig_test(
+    name = "main_test",
+    main = "main.zig"
+)

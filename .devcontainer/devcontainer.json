@@ -13,7 +13,8 @@
                 "esbenp.prettier-vscode",
                 "ms-azuretools.vscode-docker",
                 "github.vscode-github-actions",
-                "eamodio.gitlens"
+                "eamodio.gitlens",
+                "mkhl.direnv"
             ]
         }
     }

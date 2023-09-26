@@ -1,0 +1,12 @@
+module(
+    name = "bambino",
+    version = "0.1.0-alpha",
+)
+
+bazel_dep(name = "rules_zig")
+
+archive_override(
+    module_name = "rules_zig",
+    strip_prefix = "rules_zig-f2347a0398b252bc876d246467a4d691ccdc9bac",
+    urls = ["https://github.com/aherrmann/rules_zig/archive/f2347a0398b252bc876d246467a4d691ccdc9bac.tar.gz"],
+)

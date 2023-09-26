@@ -11,6 +11,9 @@
       devShells.default = pkgs.mkShell {
         packages = [
           pkgs.bazel
+          pkgs.buildifier
+          pkgs.zig
+          pkgs.zls
         ];
       };
     });
