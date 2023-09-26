@@ -20,4 +20,5 @@ COPY flake.nix flake.lock .envrc /workspaces/bambino/
 
 RUN cd /workspaces/bambino \
   && nix profile install nixpkgs#direnv \
+  && nix develop --command bazel --version \
   && nix run nixpkgs#direnv allow

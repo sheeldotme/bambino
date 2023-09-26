@@ -14,7 +14,8 @@
                 "ms-azuretools.vscode-docker",
                 "github.vscode-github-actions",
                 "eamodio.gitlens",
-                "mkhl.direnv"
+                "mkhl.direnv",
+                "ziglang.vscode-zig"
             ]
         }
     }
