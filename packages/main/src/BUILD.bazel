@@ -1,3 +1,0 @@
-load("@rules_zig//zig:defs.bzl", "zig_package")
-
-exports_files(["main.zig"])
