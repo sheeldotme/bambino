@@ -10,8 +10,6 @@
     {
       devShells.default = pkgs.mkShell {
         packages = [
-          pkgs.bazel
-          pkgs.buildifier
           pkgs.just
           pkgs.zig
           pkgs.zls
