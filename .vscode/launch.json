@@ -4,10 +4,10 @@
         {
             "type": "lldb",
             "request": "launch",
-            "name": "Debug",
-            "program": "${workspaceFolder}/packages/main/test",
-            "cwd": "${workspaceFolder}/packages/main",
-            "preLaunchTask": "main-build-test"
+            "name": "Debug mandrake-parser tests",
+            "program": "${workspaceFolder}/scopes/mandrake/parser/test",
+            "cwd": "${workspaceFolder}/scopes/mandrake/parser",
+            "preLaunchTask": "mandrake-parser-build-test"
         }
     ]
 }

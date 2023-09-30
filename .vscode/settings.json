@@ -1,4 +1,5 @@
 {
     "nix.enableLanguageServer": true,
-    "nix.serverPath": "nil"
+    "nix.serverPath": "nil",
+    "zig.zls.enabled": true
 }

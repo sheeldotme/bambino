@@ -2,7 +2,7 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "main-build-test",
+			"label": "mandrake-parser-build-test",
 			"type": "shell",
 			"command": "just",
 			"args": ["build-test"],
@@ -10,7 +10,7 @@
 				"kind": "build",
 			},
 			"options": {
-				"cwd": "${workspaceFolder}/packages/main"
+				"cwd": "${workspaceFolder}/scopes/mandrake/parser"
 			}
 		},
 		{
@@ -19,7 +19,7 @@
 			"command": "just",
 			"args": ["clean"],
 			"options": {
-				"cwd": "${workspaceFolder}/packages/main"
+				"cwd": "${workspaceFolder}/scopes/mandrake/parser"
 			}
 		}
 	]
