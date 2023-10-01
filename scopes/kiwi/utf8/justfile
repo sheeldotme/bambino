@@ -1,0 +1,14 @@
+build-test:
+    rm -f test && ln -fs "$(zig build test && find zig-cache -name test)" .
+
+build:
+    zig build
+
+clean:
+    rm -rf test zig-cache
+
+test:
+    zig test src/main.zig
+
+format:
+    zig fmt .

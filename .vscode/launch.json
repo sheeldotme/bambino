@@ -8,6 +8,14 @@
             "program": "${workspaceFolder}/scopes/mandrake/parser/test",
             "cwd": "${workspaceFolder}/scopes/mandrake/parser",
             "preLaunchTask": "mandrake-parser-build-test"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug kiwi-utf8 tests",
+            "program": "${workspaceFolder}/scopes/kiwi/utf8/test",
+            "cwd": "${workspaceFolder}/scopes/kiwi/utf8",
+            "preLaunchTask": "kiwi-utf8-build-test"
         }
     ]
 }

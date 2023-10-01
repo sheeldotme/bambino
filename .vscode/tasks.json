@@ -14,12 +14,33 @@
 			}
 		},
 		{
-			"label": "main-clean",
+			"label": "mandrake-parser-clean",
 			"type": "shell",
 			"command": "just",
 			"args": ["clean"],
 			"options": {
 				"cwd": "${workspaceFolder}/scopes/mandrake/parser"
+			}
+		},
+		{
+			"label": "kiwi-utf8-build-test",
+			"type": "shell",
+			"command": "just",
+			"args": ["build-test"],
+			"group": {
+				"kind": "build",
+			},
+			"options": {
+				"cwd": "${workspaceFolder}/scopes/kiwi/utf8"
+			}
+		},
+		{
+			"label": "kiwi-utf8-clean",
+			"type": "shell",
+			"command": "just",
+			"args": ["clean"],
+			"options": {
+				"cwd": "${workspaceFolder}/scopes/kiwi/utf8"
 			}
 		}
 	]
