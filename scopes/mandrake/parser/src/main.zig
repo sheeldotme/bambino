@@ -90,36 +90,36 @@ inline fn contains(comptime T: type, array: []const T, value: T) bool {
     return false;
 }
 
-const PacketParsingError = error{
-    OpValueNotSupported,
-    HtypeValueNotSupported,
-    HlenValueNotSupported,
-    FlagsValueNotSupported,
-    SnameValueNotSupported,
-    FileValueNotSupported,
+const RequestError = error{
+    OperationNotSupported,
+    HardwareTypeNotSupported,
+    HardwareAddressLengthNotSupported,
+    FlagsNotSupported,
+    ServerNameNotProvided,
+    FileNameNotProvided,
 };
 
 fn parse_packet(bytes: []const u8, out: *Packet) !void {
     const packet: *const RawPacket = @alignCast(@ptrCast(bytes.ptr));
 
     if (packet.op != 1 and packet.op != 2) {
-        return error.OpValueNotSupported;
+        return error.OperationNotSupported;
     }
 
     if (packet.htype != 1) {
-        return error.HtypeValueNotSupported;
+        return error.HardwareTypeNotSupported;
     }
 
     if (packet.hlen != 6) {
-        return error.HlenValueNotSupported;
+        return error.HardwareAddressLengthNotSupported;
     }
 
     if (packet.flags[0] != 0 or packet.flags[1] != 0) {
-        return error.FlagsValueNotSupported;
+        return error.FlagsNotSupported;
     }
 
-    _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.SnameValueNotSupported;
-    _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.FileValueNotSupported;
+    _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.ServerNameNotProvided;
+    _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.FileNameNotProvided;
 
     out.operation = @enumFromInt(packet.op);
     out.hardware_type = @enumFromInt(packet.htype);
@@ -175,13 +175,13 @@ test "Test Packet Parsing Errors" {
 
     var out: Packet = undefined;
 
-    try testing.expectError(error.OpValueNotSupported, parse_packet(&bad_packet, &out));
-    try testing.expectError(error.HtypeValueNotSupported, parse_packet(good_packet[0..1] ++ bad_packet[1..], &out));
-    try testing.expectError(error.HlenValueNotSupported, parse_packet(good_packet[0..2] ++ bad_packet[2..], &out));
-    try testing.expectError(error.FlagsValueNotSupported, parse_packet(good_packet[0..10] ++ bad_packet[10..], &out));
-    try testing.expectError(error.FlagsValueNotSupported, parse_packet(good_packet[0..11] ++ bad_packet[11..], &out));
-    try testing.expectError(error.SnameValueNotSupported, parse_packet(good_packet[0..44] ++ bad_packet[44..], &out));
-    try testing.expectError(error.FileValueNotSupported, parse_packet(good_packet[0..108] ++ bad_packet[108..], &out));
+    try testing.expectError(error.OperationNotSupported, parse_packet(&bad_packet, &out));
+    try testing.expectError(error.HardwareTypeNotSupported, parse_packet(good_packet[0..1] ++ bad_packet[1..], &out));
+    try testing.expectError(error.HardwareAddressLengthNotSupported, parse_packet(good_packet[0..2] ++ bad_packet[2..], &out));
+    try testing.expectError(error.FlagsNotSupported, parse_packet(good_packet[0..10] ++ bad_packet[10..], &out));
+    try testing.expectError(error.FlagsNotSupported, parse_packet(good_packet[0..11] ++ bad_packet[11..], &out));
+    try testing.expectError(error.ServerNameNotProvided, parse_packet(good_packet[0..44] ++ bad_packet[44..], &out));
+    try testing.expectError(error.FileNameNotProvided, parse_packet(good_packet[0..108] ++ bad_packet[108..], &out));
 
     try parse_packet(&good_packet, &out);
     try testing.expectEqual(out.operation, PacketOperation.BootRequest);
