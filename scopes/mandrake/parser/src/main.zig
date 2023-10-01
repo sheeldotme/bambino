@@ -1,28 +1,45 @@
 const std = @import("std");
 
+/// A BOOTP packet
 const RawPacket = struct {
+    /// Operation code
     op: u8,
+    /// Hardware type
     htype: u8,
+    /// Hardware address length
     hlen: u8,
+    /// Hops
     hops: u8,
+    /// Transaction ID
     xid: [4]u8,
+    /// Seconds
     secs: [2]u8,
+    /// Flags
     flags: [2]u8,
+    /// Client IP address
     ciaddr: [4]u8,
+    /// Your IP address
     yiaddr: [4]u8,
+    /// Server IP address
     siaddr: [4]u8,
+    /// Gateway IP address
     giaddr: [4]u8,
+    /// Client hardware address
     chaddr: [16]u8,
+    /// Server name
     sname: [64]u8,
+    /// Boot file name
     file: [128]u8,
+    /// Vendor specific information
     vend: [64]u8,
 };
 
-const PacketOperation = enum(u8) {
+const Operation = enum(u8) {
     BootRequest = 1,
     BootReply = 2,
 };
 
+/// https://www.iana.org/assignments/arp-parameters/arp-parameters.xhtml#arp-parameters-2
 const HardwareType = enum(u8) {
     Reserved = 0,
     Ethernet = 1,
@@ -65,39 +82,63 @@ const HardwareType = enum(u8) {
     UnifiedBus = 38,
 };
 
+/// A parsed BOOTP packet
+/// https://datatracker.ietf.org/doc/html/rfc951#section-3
 const Packet = struct {
-    operation: PacketOperation,
+    /// The BOOTP operation code eg. BOOTREQUEST & BOOTREPLY.
+    operation: Operation,
+    /// The hardware type eg. Ethernet
     hardware_type: HardwareType,
+    /// The hardware address length in bytes
     hardware_address_length: u8,
+    /// The number of hops the packet has taken
     hops: u8,
+    /// The client assigned transaction ID
     transaction_id: u32,
+    /// The number of seconds since the client began the request
     seconds: u16,
+    /// Extra flags eg. broadcast flag (0x8000)
     flags: u16,
+    /// The IP address the client is requesting
     client_ip_address: u32,
+    /// The IP address the server is assigning to the client
     your_ip_address: u32,
+    /// The IP address of the server
     server_ip_address: u32,
+    /// The IP address of the gateway
     gateway_ip_address: u32,
+    /// The client hardware address eg. the MAC address
     client_hardware_address: [16]u8,
+    /// The server name eg. the TFTP server, the NFS server, etc.
     server_name: [64]u8,
+    /// The boot file name eg. the kernel image, the initrd, etc.
     boot_file_name: [128]u8,
+    /// The vendor specific information eg. DHCP options, PXE options, etc.
     vendor_specific_information: [64]u8,
 };
 
+/// Error codes for parsing BOOTP packets
 const RequestError = error{
+    /// Only BOOTREQUEST and BOOTREPLY are supported
     OperationNotSupported,
+    /// Only Ethernet is supported
     HardwareTypeNotSupported,
+    /// Only 6 byte hardware addresses are supported
     HardwareAddressLengthNotSupported,
+    /// Flags must be 0
     FlagsNotSupported,
+    /// Server name must be null terminated
     ServerNameNotProvided,
+    /// Boot file name must be null terminated
     BootFileNameNotProvided,
 };
 
 /// Parses a BOOTP packet
-/// https://tools.ietf.org/html/rfc951
-/// precondition: bytes.len == 300
+/// https://datatracker.ietf.org/doc/html/rfc951#section-3 \
+/// precondition: bytes.len == 300 \
 /// precondition: out != null
 fn parse_packet(bytes: []const u8, out: *Packet) !void {
-    const packet: *const RawPacket = @alignCast(@ptrCast(bytes.ptr));
+    const packet: *const RawPacket = @ptrCast(bytes.ptr);
 
     if (packet.op != 1 and packet.op != 2) return error.OperationNotSupported;
     if (packet.htype != 1) return error.HardwareTypeNotSupported;
@@ -139,8 +180,8 @@ test "Test Packet Parsing Errors" {
     ++ [_]u8{5} ** 4 // siaddr
     ++ [_]u8{6} ** 4 // giaddr
     ++ [_]u8{7} ** 16 // chaddr
-    ++ [_]u8{8} ** 63 ++ [_]u8{0} // sname
-    ++ [_]u8{9} ** 127 ++ [_]u8{0} // file
+    ++ [_]u8{8} ** 63 ++ [_]u8{0} // sname (null terminated)
+    ++ [_]u8{9} ** 127 ++ [_]u8{0} // file (null terminated)
     ++ [_]u8{0} ** 64; // vend
 
     const bad_packet = [_]u8{0} // op
@@ -170,8 +211,8 @@ test "Test Packet Parsing Errors" {
     try testing.expectError(error.BootFileNameInvalid, parse_packet(good_packet[0..108] ++ bad_packet[108..], &out));
 
     try parse_packet(&good_packet, &out);
-    try testing.expectEqual(out.operation, PacketOperation.BootRequest);
-    try testing.expectEqual(out.hardware_type, HardwareType.Ethernet);
+    try testing.expectEqual(out.operation, .BootRequest);
+    try testing.expectEqual(out.hardware_type, .Ethernet);
     try testing.expectEqual(out.hardware_address_length, 6);
     try testing.expectEqual(out.hops, 0);
     try testing.expectEqual(out.transaction_id, 0x01010101);
