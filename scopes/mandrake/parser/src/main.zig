@@ -83,10 +83,6 @@ const Packet = struct {
     vendor_specific_information: [64]u8,
 };
 
-comptime {
-    std.debug.assert(@sizeOf(RawPacket) == @sizeOf(Packet));
-}
-
 inline fn contains(comptime T: type, array: []const T, value: T) bool {
     for (array) |item| {
         if (item == value) return true;
@@ -134,30 +130,13 @@ fn parse_packet(bytes: []const u8, out: *Packet) !void {
     out.hardware_type = @enumFromInt(packet.htype);
     out.hardware_address_length = packet.hlen;
     out.hops = packet.hops;
-    out.transaction_id = (@as(u32, packet.xid[0]) << 24) |
-        (@as(u32, packet.xid[1]) << 16) |
-        (@as(u32, packet.xid[2]) << 8) |
-        @as(u32, packet.xid[3]);
-    out.seconds = (@as(u16, packet.secs[0]) << 8) |
-        @as(u16, packet.secs[1]);
-    out.flags = (@as(u16, packet.flags[0]) << 8) |
-        @as(u16, packet.flags[1]);
-    out.client_ip_address = (@as(u32, packet.ciaddr[0]) << 24) |
-        (@as(u32, packet.ciaddr[1]) << 16) |
-        (@as(u32, packet.ciaddr[2]) << 8) |
-        @as(u32, packet.ciaddr[3]);
-    out.your_ip_address = (@as(u32, packet.yiaddr[0]) << 24) |
-        (@as(u32, packet.yiaddr[1]) << 16) |
-        (@as(u32, packet.yiaddr[2]) << 8) |
-        @as(u32, packet.yiaddr[3]);
-    out.server_ip_address = (@as(u32, packet.siaddr[0]) << 24) |
-        (@as(u32, packet.siaddr[1]) << 16) |
-        (@as(u32, packet.siaddr[2]) << 8) |
-        @as(u32, packet.siaddr[3]);
-    out.gateway_ip_address = (@as(u32, packet.giaddr[0]) << 24) |
-        (@as(u32, packet.giaddr[1]) << 16) |
-        (@as(u32, packet.giaddr[2]) << 8) |
-        @as(u32, packet.giaddr[3]);
+    out.transaction_id = std.mem.readIntBig(u32, &packet.xid);
+    out.seconds = std.mem.readIntBig(u16, &packet.secs);
+    out.flags = std.mem.readIntBig(u16, &packet.flags);
+    out.client_ip_address = std.mem.readIntBig(u32, &packet.ciaddr);
+    out.your_ip_address = std.mem.readIntBig(u32, &packet.yiaddr);
+    out.server_ip_address = std.mem.readIntBig(u32, &packet.siaddr);
+    out.gateway_ip_address = std.mem.readIntBig(u32, &packet.giaddr);
     out.client_hardware_address = packet.chaddr;
     out.server_name = packet.sname;
     out.boot_file_name = packet.file;
