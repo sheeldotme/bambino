@@ -34,11 +34,15 @@ const RawPacket = struct {
     vend: [64]u8,
 };
 
+/// A BOOTP operation
 const Operation = enum(u8) {
+    /// A client request
     BootRequest = 1,
+    /// A server reply
     BootReply = 2,
 };
 
+/// A BOOTP hardware type
 /// https://www.iana.org/assignments/arp-parameters/arp-parameters.xhtml#arp-parameters-2
 const HardwareType = enum(u8) {
     Reserved = 0,
