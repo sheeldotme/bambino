@@ -36,7 +36,7 @@ const Packet = struct {
 };
 
 /// A BOOTP packet
-const RawPacket = struct {
+const RawPacket = extern struct {
     /// Operation code
     op: u8,
     /// Hardware type
