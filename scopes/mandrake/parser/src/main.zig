@@ -118,13 +118,8 @@ fn parse_packet(bytes: []const u8, out: *Packet) !void {
         return error.FlagsValueNotSupported;
     }
 
-    if (!contains(u8, &packet.sname, 0)) {
-        return error.SnameValueNotSupported;
-    }
-
-    if (!contains(u8, &packet.file, 0)) {
-        return error.FileValueNotSupported;
-    }
+    _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.SnameValueNotSupported;
+    _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.FileValueNotSupported;
 
     out.operation = @enumFromInt(packet.op);
     out.hardware_type = @enumFromInt(packet.htype);
