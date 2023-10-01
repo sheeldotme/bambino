@@ -92,24 +92,17 @@ const RequestError = error{
     BootFileNameNotProvided,
 };
 
+/// Parses a BOOTP packet
+/// https://tools.ietf.org/html/rfc951
+/// precondition: bytes.len == 300
+/// precondition: out != null
 fn parse_packet(bytes: []const u8, out: *Packet) !void {
     const packet: *const RawPacket = @alignCast(@ptrCast(bytes.ptr));
 
-    if (packet.op != 1 and packet.op != 2) {
-        return error.OperationNotSupported;
-    }
-
-    if (packet.htype != 1) {
-        return error.HardwareTypeNotSupported;
-    }
-
-    if (packet.hlen != 6) {
-        return error.HardwareAddressLengthNotSupported;
-    }
-
-    if (packet.flags[0] != 0 or packet.flags[1] != 0) {
-        return error.FlagsNotSupported;
-    }
+    if (packet.op != 1 and packet.op != 2) return error.OperationNotSupported;
+    if (packet.htype != 1) return error.HardwareTypeNotSupported;
+    if (packet.hlen != 6) return error.HardwareAddressLengthNotSupported;
+    if (packet.flags[0] != 0 or packet.flags[1] != 0) return error.FlagsNotSupported;
 
     _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.ServerNameInvalid;
     _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.BootFileNameInvalid;
