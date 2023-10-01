@@ -132,9 +132,9 @@ const RequestError = error{
     /// Flags must be 0
     FlagsNotSupported,
     /// Server name must be null terminated
-    ServerNameNotProvided,
+    ServerNameInvalid,
     /// Boot file name must be null terminated
-    BootFileNameNotProvided,
+    BootFileNameInvalid,
 };
 
 /// Parses a BOOTP packet
