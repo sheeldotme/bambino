@@ -83,13 +83,6 @@ const Packet = struct {
     vendor_specific_information: [64]u8,
 };
 
-inline fn contains(comptime T: type, array: []const T, value: T) bool {
-    for (array) |item| {
-        if (item == value) return true;
-    }
-    return false;
-}
-
 const RequestError = error{
     OperationNotSupported,
     HardwareTypeNotSupported,
