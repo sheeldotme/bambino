@@ -111,8 +111,8 @@ fn parse_packet(bytes: []const u8, out: *Packet) !void {
         return error.FlagsNotSupported;
     }
 
-    _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.ServerNameNotProvided;
-    _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.BootFileNameNotProvided;
+    _ = std.mem.indexOfScalar(u8, &packet.sname, 0) orelse return error.ServerNameInvalid;
+    _ = std.mem.indexOfScalar(u8, &packet.file, 0) orelse return error.BootFileNameInvalid;
 
     out.operation = @enumFromInt(packet.op);
     out.hardware_type = @enumFromInt(packet.htype);
@@ -173,8 +173,8 @@ test "Test Packet Parsing Errors" {
     try testing.expectError(error.HardwareAddressLengthNotSupported, parse_packet(good_packet[0..2] ++ bad_packet[2..], &out));
     try testing.expectError(error.FlagsNotSupported, parse_packet(good_packet[0..10] ++ bad_packet[10..], &out));
     try testing.expectError(error.FlagsNotSupported, parse_packet(good_packet[0..11] ++ bad_packet[11..], &out));
-    try testing.expectError(error.ServerNameNotProvided, parse_packet(good_packet[0..44] ++ bad_packet[44..], &out));
-    try testing.expectError(error.BootFileNameNotProvided, parse_packet(good_packet[0..108] ++ bad_packet[108..], &out));
+    try testing.expectError(error.ServerNameInvalid, parse_packet(good_packet[0..44] ++ bad_packet[44..], &out));
+    try testing.expectError(error.BootFileNameInvalid, parse_packet(good_packet[0..108] ++ bad_packet[108..], &out));
 
     try parse_packet(&good_packet, &out);
     try testing.expectEqual(out.operation, PacketOperation.BootRequest);
