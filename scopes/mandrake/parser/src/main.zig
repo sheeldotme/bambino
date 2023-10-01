@@ -1,5 +1,40 @@
 const std = @import("std");
 
+/// A parsed BOOTP packet
+/// https://datatracker.ietf.org/doc/html/rfc951#section-3
+const Packet = struct {
+    /// The BOOTP operation code eg. BOOTREQUEST & BOOTREPLY.
+    operation: Operation,
+    /// The hardware type eg. Ethernet
+    hardware_type: HardwareType,
+    /// The hardware address length in bytes
+    hardware_address_length: u8,
+    /// The number of hops the packet has taken
+    hops: u8,
+    /// The client assigned transaction ID
+    transaction_id: u32,
+    /// The number of seconds since the client began the request
+    seconds: u16,
+    /// Extra flags eg. broadcast flag (0x8000)
+    flags: u16,
+    /// The IP address the client is requesting
+    client_ip_address: u32,
+    /// The IP address the server is assigning to the client
+    your_ip_address: u32,
+    /// The IP address of the server
+    server_ip_address: u32,
+    /// The IP address of the gateway
+    gateway_ip_address: u32,
+    /// The client hardware address eg. the MAC address
+    client_hardware_address: [16]u8,
+    /// The server name eg. the TFTP server, the NFS server, etc.
+    server_name: [64]u8,
+    /// The boot file name eg. the kernel image, the initrd, etc.
+    boot_file_name: [128]u8,
+    /// The vendor specific information eg. DHCP options, PXE options, etc.
+    vendor_specific_information: [64]u8,
+};
+
 /// A BOOTP packet
 const RawPacket = struct {
     /// Operation code
@@ -84,41 +119,6 @@ const HardwareType = enum(u8) {
     HWExp1 = 36,
     HFI = 37,
     UnifiedBus = 38,
-};
-
-/// A parsed BOOTP packet
-/// https://datatracker.ietf.org/doc/html/rfc951#section-3
-const Packet = struct {
-    /// The BOOTP operation code eg. BOOTREQUEST & BOOTREPLY.
-    operation: Operation,
-    /// The hardware type eg. Ethernet
-    hardware_type: HardwareType,
-    /// The hardware address length in bytes
-    hardware_address_length: u8,
-    /// The number of hops the packet has taken
-    hops: u8,
-    /// The client assigned transaction ID
-    transaction_id: u32,
-    /// The number of seconds since the client began the request
-    seconds: u16,
-    /// Extra flags eg. broadcast flag (0x8000)
-    flags: u16,
-    /// The IP address the client is requesting
-    client_ip_address: u32,
-    /// The IP address the server is assigning to the client
-    your_ip_address: u32,
-    /// The IP address of the server
-    server_ip_address: u32,
-    /// The IP address of the gateway
-    gateway_ip_address: u32,
-    /// The client hardware address eg. the MAC address
-    client_hardware_address: [16]u8,
-    /// The server name eg. the TFTP server, the NFS server, etc.
-    server_name: [64]u8,
-    /// The boot file name eg. the kernel image, the initrd, etc.
-    boot_file_name: [128]u8,
-    /// The vendor specific information eg. DHCP options, PXE options, etc.
-    vendor_specific_information: [64]u8,
 };
 
 /// Error codes for parsing BOOTP packets
