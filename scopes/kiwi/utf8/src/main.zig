@@ -1,10 +1,17 @@
 const std = @import("std");
 const testing = std.testing;
+const simd = std.simd;
 
-export fn add(a: i32, b: i32) i32 {
-    return a + b;
+const Vector = @Vector(16, u8);
+
+fn isAscii(vector: Vector) bool {
+    const mask: Vector = @splat(0x80);
+    const zeroes: Vector = @splat(0);
+    return @reduce(.And, (vector & mask) == zeroes);
 }
 
-test "basic add functionality" {
-    try testing.expect(add(3, 7) == 10);
+test "validate ASCII characters" {
+    try testing.expectEqual(true, isAscii(simd.iota(u8, @sizeOf(Vector))));
+    try testing.expectEqual(true, isAscii(@splat(127)));
+    try testing.expectEqual(false, isAscii(@splat(128)));
 }
