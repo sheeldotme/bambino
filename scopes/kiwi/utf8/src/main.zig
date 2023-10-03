@@ -1,6 +1,4 @@
 const std = @import("std");
-const testing = std.testing;
-const simd = std.simd;
 
 /// Returns true if the given bytes are all ASCII. \
 /// precondition: N > 0
